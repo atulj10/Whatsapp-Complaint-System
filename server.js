@@ -4,6 +4,13 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const { PrismaBetterSqlite3 } = require("@prisma/adapter-better-sqlite3");
 const twilio = require("twilio");
+const cloudinary = require("cloudinary").v2;
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const adapter = new PrismaBetterSqlite3({
   url: "file:./dev.db",
@@ -68,6 +75,27 @@ app.post("/webhook/whatsapp", async (req, res) => {
       });
     }
 
+    // Download image from Twilio and upload to Cloudinary
+    let imageUrl = complaint.imageUrl;
+    if (body.MediaUrl0) {
+      try {
+        const auth = Buffer.from(
+          `${body.AccountSid}:${process.env.TWILIO_AUTH_TOKEN}`
+        ).toString("base64");
+        const res = await fetch(body.MediaUrl0, {
+          headers: { Authorization: `Basic ${auth}` },
+        });
+        const buffer = Buffer.from(await res.arrayBuffer());
+        const dataUri = `data:${res.headers.get("content-type") || "image/jpeg"};base64,${buffer.toString("base64")}`;
+        const result = await cloudinary.uploader.upload(dataUri, {
+          folder: "complaints",
+        });
+        imageUrl = result.secure_url;
+      } catch (err) {
+        console.error("Image upload failed:", err.message);
+      }
+    }
+
     // Update complaint with latest message
     complaint = await prisma.complaint.update({
       where: {
@@ -76,7 +104,7 @@ app.post("/webhook/whatsapp", async (req, res) => {
       data: {
         profileName: body.ProfileName || complaint.profileName,
         remark: body.Body || complaint.remark,
-        imageUrl: body.MediaUrl0 || complaint.imageUrl,
+        imageUrl,
         latitude: body.Latitude
           ? parseFloat(body.Latitude)
           : complaint.latitude,
@@ -131,3 +159,8 @@ app.post("/webhook/whatsapp", async (req, res) => {
 app.listen(3000, () => {
   console.log("Server running on port 3000");
 });
+
+
+
+// npm run dev
+// npx prisma studio
