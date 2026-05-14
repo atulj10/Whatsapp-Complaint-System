@@ -1,0 +1,26 @@
+{
+  "name": "whatsapp-complaint-system",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@prisma/adapter-better-sqlite3": "^7.8.0",
+    "@prisma/client": "^7.8.0",
+    "better-sqlite3": "^12.10.0",
+    "cloudinary": "^2.10.0",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "prisma": "^7.8.0",
+    "twilio": "^6.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^25.7.0",
+    "nodemon": "^3.1.14"
+  }
+}
