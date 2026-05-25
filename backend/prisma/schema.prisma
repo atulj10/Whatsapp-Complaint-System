@@ -7,21 +7,26 @@ datasource db {
 }
 
 model Complaint {
-  id          Int      @id @default(autoincrement())
-  phoneNumber String
-  profileName String?
-  remark      String?
-  imageUrl    String?
-  status      String   @default("Pending")
-  completed   Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  phoneNumber  String
+  profileName  String?
+  remark       String?
+  imageUrl     String?
+  status       String   @default("Pending")
+  adminRemark  String?
+  completed    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
-  locationId  Int?
-  circleId    Int?
+  locationId   Int?
+  circleId     Int?
 
-  location    Location? @relation(fields: [locationId], references: [id])
-  circle      Circle?   @relation(fields: [circleId], references: [id])
+  location     Location? @relation(fields: [locationId], references: [id])
+  circle       Circle?   @relation(fields: [circleId], references: [id])
+
+  @@index([status])
+  @@index([circleId])
+  @@index([createdAt])
 }
 
 model Location {
