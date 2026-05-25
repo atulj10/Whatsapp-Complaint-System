@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "seed": "node prisma/seed.js"
+    "seed": "node prisma/seed.js",
+    "seed:dummy": "node prisma/seed-dummy.js"
   },
   "prisma": {
     "seed": "node prisma/seed.js"

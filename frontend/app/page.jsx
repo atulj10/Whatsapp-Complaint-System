@@ -37,6 +37,14 @@ export default function DashboardPage() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
+  const handleLimitChange = useCallback((limit) => {
+    setFilters((prev) => ({ ...prev, limit, page: 1 }));
+  }, []);
+
+  const handleSort = useCallback((sortBy, order) => {
+    setFilters((prev) => ({ ...prev, sortBy, order, page: 1 }));
+  }, []);
+
   return (
     <div className="min-h-screen">
       <header className="bg-white border-b border-gray-200">
@@ -73,13 +81,18 @@ export default function DashboardPage() {
           <>
             <ComplaintsTable
               data={data?.data || []}
+              sortBy={filters.sortBy}
+              order={filters.order}
+              onSort={handleSort}
               onSelect={(c) => setSelectedId(c.id)}
             />
             <Pagination
               page={data?.pagination?.page || 1}
+              limit={data?.pagination?.limit || 20}
               totalPages={data?.pagination?.totalPages || 1}
               total={data?.pagination?.total || 0}
               onChange={handlePageChange}
+              onLimitChange={handleLimitChange}
             />
           </>
         )}
