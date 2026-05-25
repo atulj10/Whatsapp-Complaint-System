@@ -12,9 +12,40 @@ model Complaint {
   profileName String?
   remark      String?
   imageUrl    String?
-  latitude    Float?
-  longitude   Float?
+  status      String   @default("Pending")
   completed   Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+
+  locationId  Int?
+  circleId    Int?
+
+  location    Location? @relation(fields: [locationId], references: [id])
+  circle      Circle?   @relation(fields: [circleId], references: [id])
+}
+
+model Location {
+  id               Int         @id @default(autoincrement())
+  latitude         Float
+  longitude        Float
+  formattedAddress String?
+  createdAt        DateTime    @default(now())
+
+  complaints       Complaint[]
+}
+
+model Circle {
+  id           Int         @id @default(autoincrement())
+  name         String
+  code         String
+  minLatitude  Float
+  maxLatitude  Float
+  minLongitude Float
+  maxLongitude Float
+  priority     Int         @default(0)
+  isActive     Boolean     @default(true)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  complaints   Complaint[]
 }

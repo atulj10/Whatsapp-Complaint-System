@@ -1,9 +1,14 @@
 {
   "name": "whatsapp-complaint-system",
   "version": "1.0.0",
+  "type": "module",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js"
+    "dev": "nodemon server.js",
+    "seed": "node prisma/seed.js"
+  },
+  "prisma": {
+    "seed": "node prisma/seed.js"
   },
   "keywords": [],
   "author": "",
@@ -12,6 +17,7 @@
   "dependencies": {
     "@prisma/adapter-better-sqlite3": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "axios": "^1.16.1",
     "better-sqlite3": "^12.10.0",
     "cloudinary": "^2.10.0",
     "dotenv": "^17.4.2",
